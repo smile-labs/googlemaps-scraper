@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import selenium
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.by import By
@@ -214,7 +215,6 @@ class GoogleMapsScraper:
         #<button ved="1i:1,t:18519,e:0,p:kPkcYIz-Dtql-QaL1YawDw:1969" jstcache="1202" jsaction="pane.reviewChart.moreReviews" class="gm2-button-alt jqnFjrOWMVU__button-blue" jsan="7.gm2-button-alt,7.jqnFjrOWMVU__button-blue,0.ved,22.jsaction">14 reviews</button>
         #<button aria-label="14 reviews" vet="3648" jsaction="pane.rating.moreReviews" jstcache="1010" class="widget-pane-link" jsan="7.widget-pane-link,0.aria-label,0.vet,0.jsaction">14 reviews</button>
         links = self.driver.find_elements_by_xpath('//button[@jsaction=\'pane.reviewChart.moreReviews\']')
-        print('LINKS HERE', links)
         for l in links:
             l.click()
         time.sleep(2)
@@ -257,7 +257,11 @@ class GoogleMapsScraper:
 
         options.add_argument("--disable-notifications")
         options.add_argument("--lang=en-GB")
-        input_driver = webdriver.Chrome(chrome_options=options)
+        options.add_argument('--disable-gpu')
+        input_driver = webdriver.Remote(
+            command_executor=f"http://selenium-chrome:4444/wd/hub",
+            options=options,
+        )
 
         return input_driver
 
