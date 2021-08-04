@@ -64,6 +64,7 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     writer = None
+    mysql_data = None
 
     # mysql connection
     if (args.output == 'mysql'):
@@ -85,7 +86,8 @@ if __name__ == '__main__':
         with open(args.i, 'r') as urls_file:
             for url in urls_file:
                 print(url)
-                mysql_data['url'] = url
+                if (mysql_data != None):
+                    mysql_data['url'] = url
                 if args.place:
                     print(scraper.get_account(url))
                 else:
@@ -109,6 +111,7 @@ if __name__ == '__main__':
                         result = True
 
                         for r in reviews:
+                            print(r)
                             if (args.output == 'mysql'):
                                 result = insert_review(r, mysql_data)
                                 if (result == False):

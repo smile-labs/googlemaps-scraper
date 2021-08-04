@@ -23,6 +23,7 @@ REVIEW_TEXT = 'ODSEW-ShBeI-text'
 REVIEW_RATING = 'ODSEW-ShBeI-H1e3jb'
 REVIEW_CONTRIB_CONTAINER = 'ODSEW-ShBeI-tXxcle'
 REVIEW_RELATIVE_DATE = 'ODSEW-ShBeI-RgZmSc-date'
+REVIEW_USER_COMMENTS = 'ODSEW-ShBeI-VdSJob'
 EXPAND_BUTTON_XPATH = '//button[@class=\'ODSEW-KoToPc-ShBeI gXqMYb-hSRGPd\']'
 
 SORT_BUTTON_XPATH = '//button[@data-value=\'Ordenar\' or @data-value=\'Sort\']'
@@ -87,10 +88,10 @@ class GoogleMapsScraper:
         # scroll to load reviews
 
         # wait for other reviews to load (ajax)
-        time.sleep(4)
 
         self.__scroll()
 
+        time.sleep(4)
 
         # expand review text
         self.__expand_reviews()
@@ -169,13 +170,15 @@ class GoogleMapsScraper:
         # item['n_photo_user'] = n_photos
         # item['url_user'] = user_url
 
-        item['id_review'] = review['data-review-id']
+        item['review_id'] = review['data-review-id']
         item['rating'] = float(review.find('span', class_=REVIEW_RATING)['aria-label'].split('\xa0e')[0])
-        item['caption'] = review.find('span', class_=REVIEW_TEXT).text
-        item['url_user'] = review.find('div', class_=REVIEW_CONTRIB_CONTAINER).find('a')['href']
-        item['username'] = review['aria-label']
+        item['comment'] = review.find('span', class_=REVIEW_TEXT).text
+        item['user_url'] = review.find('div', class_=REVIEW_CONTRIB_CONTAINER).find('a')['href']
+        item['user_name'] = review['aria-label']
         item['relative_date'] = review.find('span', class_=REVIEW_RELATIVE_DATE).text
-
+        comments_element = review.find('div', class_=REVIEW_USER_COMMENTS)
+        if (comments_element != None):
+            item['user_comments_count'] = float(comments_element.find_all('span')[1].text.split(' ')[0].replace('・', ''))
         return item
 
 
@@ -196,10 +199,13 @@ class GoogleMapsScraper:
     # expand review description
     def __expand_reviews(self):
         # use XPath to load complete reviews
-        links = self.driver.find_elements_by_xpath(EXPAND_BUTTON_XPATH)
-        for l in links:
-            l.click()
-        time.sleep(2)
+        while True:
+            links = self.driver.find_elements_by_xpath(EXPAND_BUTTON_XPATH)
+            time.sleep(0.1)
+            if (len(links) == 0):
+                 break
+            for l in links:
+                l.click()
 
     # load more reviews
     def more_reviews(self):
