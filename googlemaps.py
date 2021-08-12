@@ -172,7 +172,10 @@ class GoogleMapsScraper:
         # item['url_user'] = user_url
 
         item['review_id'] = review['data-review-id']
-        item['rating'] = float(review.find('span', class_=REVIEW_RATING)['aria-label'].split('\xa0e')[0])
+        try:
+            item['rating'] = float(review.find('span', class_=REVIEW_RATING)['aria-label'].strip().split('\xa0e')[0])
+        except:
+            item['rating'] = float(review.find('span', class_=REVIEW_RATING)['aria-label'].strip().split(' ')[0])
         item['comment'] = review.find('span', class_=REVIEW_TEXT).text
         item['user_url'] = review.find('div', class_=REVIEW_CONTRIB_CONTAINER).find('a')['href']
         item['user_name'] = review['aria-label']
