@@ -172,17 +172,17 @@ class GoogleMapsScraper:
         # item['url_user'] = user_url
 
         item['review_id'] = review['data-review-id']
-        try:
-            item['rating'] = float(review.find('span', class_=REVIEW_RATING)['aria-label'].strip().split('\xa0e')[0])
-        except:
-            item['rating'] = float(review.find('span', class_=REVIEW_RATING)['aria-label'].strip().split(' ')[0])
+        item['rating'] = review.find('span', class_=REVIEW_RATING)['aria-label'].strip()
         item['comment'] = review.find('span', class_=REVIEW_TEXT).text
         item['user_url'] = review.find('div', class_=REVIEW_CONTRIB_CONTAINER).find('a')['href']
         item['user_name'] = review['aria-label']
         item['relative_date'] = review.find('span', class_=REVIEW_RELATIVE_DATE).text
         comments_element = review.find('div', class_=REVIEW_USER_COMMENTS)
         if (comments_element != None):
-            item['user_comments_count'] = float(comments_element.find_all('span')[1].text.split(' ')[0].replace('・', ''))
+            try:
+                item['user_comments_count'] = float(comments_element.find_all('span')[1].text.split(' ')[0].replace('・', ''))
+            except:
+                item['user_comments_count'] = None
         return item
 
 
@@ -261,11 +261,13 @@ class GoogleMapsScraper:
         options.add_argument("--disable-notifications")
         options.add_argument("--lang=en-GB")
         options.add_argument('--disable-gpu')
-        input_driver = webdriver.Remote(
-            command_executor=f"http://selenium-chrome:4444/wd/hub",
-            options=options,
-        )
-
+        try:
+            input_driver = webdriver.Remote(
+                command_executor=f"http://selenium-chrome:4444/wd/hub",
+                options=options,
+            )
+        except:
+             input_driver = webdriver.Chrome(chrome_options=options)
         return input_driver
 
 
