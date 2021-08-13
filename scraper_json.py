@@ -11,19 +11,6 @@ ind = {'most_relevant' : 0 , 'newest' : 1, 'highest_rating' : 2, 'lowest_rating'
 HEADER = ['id_review', 'caption', 'relative_date', 'retrieval_date', 'rating', 'username', 'n_review_user', 'n_photo_user', 'url_user']
 HEADER_W_SOURCE = ['id_review', 'caption', 'relative_date','retrieval_date', 'rating', 'username', 'n_review_user', 'n_photo_user', 'url_user', 'url_source']
 
-def csv_writer(source_field, ind_sort_by, path='data/'):
-    outfile= ind_sort_by + '_gm_reviews.csv'
-    targetfile = open(path + outfile, mode='w', encoding='utf-8', newline='\n')
-    writer = csv.writer(targetfile, quoting=csv.QUOTE_MINIMAL)
-
-    if source_field:
-        h = HEADER_W_SOURCE
-    else:
-        h = HEADER
-    writer.writerow(h)
-
-    return writer
-
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Google Maps reviews scraper.')
     parser.add_argument('--N', type=int, default=100, help='Number of reviews to scrape')
@@ -45,9 +32,6 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     writer = None
-    if (args.output == 'csv'):
-        writer = csv_writer(args.source, args.sort_by)
-
     urls = []
     
     if (args.url != ''):
