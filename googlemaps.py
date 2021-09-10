@@ -32,9 +32,9 @@ SORT_BUTTON_XPATH = '//button[@data-value=\'Ordenar\' or @data-value=\'Sort\']'
 
 class GoogleMapsScraper:
 
-    def __init__(self, debug=False):
+    def __init__(self, debug = False, driver_host = ''):
         self.debug = debug
-        self.driver = self.__get_driver()
+        self.driver = self.__get_driver(debug, driver_host)
         self.logger = self.__get_logger()
 
     def __enter__(self):
@@ -250,7 +250,7 @@ class GoogleMapsScraper:
         return logger
 
 
-    def __get_driver(self, debug=False):
+    def __get_driver(self, debug=False, driver_host = ''):
         options = Options()
 
         if not self.debug:
@@ -261,13 +261,12 @@ class GoogleMapsScraper:
         options.add_argument("--disable-notifications")
         options.add_argument("--lang=en-GB")
         options.add_argument('--disable-gpu')
-        try:
-            input_driver = webdriver.Remote(
-                command_executor=f"http://selenium-chrome:4444/wd/hub",
-                options=options,
-            )
-        except:
-             input_driver = webdriver.Chrome(chrome_options=options)
+        fullHost = driver_host + "/wd/hub"
+        input_driver = webdriver.Remote(
+            command_executor=fullHost,
+            options=options,
+        )
+        #  input_driver = webdriver.Chrome(chrome_options=options)
         return input_driver
 
 
