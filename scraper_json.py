@@ -16,6 +16,7 @@ if __name__ == '__main__':
     parser.add_argument('--N', type=int, default=100, help='Number of reviews to scrape')
     parser.add_argument('--i', type=str, default='urls.txt', help='target URLs file')
     parser.add_argument('--url', type=str, default='', help='URL to parse')
+    parser.add_argument('--driver_host', type=str, default='', help='Driver host')
     parser.add_argument('--sort_by', type=str, default='newest', help='sort by most_relevant, newest, highest_rating or lowest_rating')
     parser.add_argument('--place', dest='place', action='store_true', help='Scrape place metadata')
     parser.add_argument('--debug', dest='debug', action='store_true', help='Run scraper using browser graphical interface')
@@ -40,7 +41,7 @@ if __name__ == '__main__':
 
     output_reviews = []
 
-    with GoogleMapsScraper(debug=args.debug) as scraper:
+    with GoogleMapsScraper(debug=args.debug, driver_host = args.driver_host) as scraper:
         for url in urls:
 
             if args.place:
