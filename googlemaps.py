@@ -172,8 +172,8 @@ class GoogleMapsScraper:
         # item['url_user'] = user_url
 
         item['review_id'] = review['data-review-id']
-        item['rating'] = review.find('span', class_=REVIEW_RATING)['aria-label'].strip()
-        item['comment'] = review.find('span', class_=REVIEW_TEXT).text
+        # item['rating'] = review.find('span', class_=REVIEW_RATING)['aria-label'].strip()
+        # item['comment'] = review.find('span', class_=REVIEW_TEXT).text
         item['user_url'] = review.find('div', class_=REVIEW_CONTRIB_CONTAINER).find('a')['href']
         item['user_name'] = review['aria-label']
         item['relative_date'] = review.find('span', class_=REVIEW_RELATIVE_DATE).text
