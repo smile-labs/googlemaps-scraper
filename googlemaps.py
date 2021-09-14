@@ -255,17 +255,14 @@ class GoogleMapsScraper:
         options.add_argument("--disable-notifications")
         options.add_argument("--lang=en-GB")
         options.add_argument('--disable-gpu')
-        if not debug:
-            options.add_argument("--headless")
-            input_driver = webdriver.Chrome(chrome_options=options)
-        else:
-            options.add_argument("--window-size=1366,768")
+            # input_driver = webdriver.Chrome(chrome_options=options)
+        options.add_argument("--window-size=1366,768")
 
-            fullHost = driver_host + "/wd/hub"
-            input_driver = webdriver.Remote(
-                command_executor=fullHost,
-                options=options,
-            )
+        fullHost = driver_host + "/wd/hub"
+        input_driver = webdriver.Remote(
+            command_executor=fullHost,
+            options=options,
+        )
         return input_driver
 
 
