@@ -252,21 +252,20 @@ class GoogleMapsScraper:
 
     def __get_driver(self, debug=False, driver_host = ''):
         options = Options()
-
-        if not self.debug:
-            options.add_argument("--headless")
-        else:
-            options.add_argument("--window-size=1366,768")
-
         options.add_argument("--disable-notifications")
         options.add_argument("--lang=en-GB")
         options.add_argument('--disable-gpu')
-        fullHost = driver_host + "/wd/hub"
-        input_driver = webdriver.Remote(
-            command_executor=fullHost,
-            options=options,
-        )
-        #  input_driver = webdriver.Chrome(chrome_options=options)
+        if not debug:
+            options.add_argument("--headless")
+            input_driver = webdriver.Chrome(chrome_options=options)
+        else:
+            options.add_argument("--window-size=1366,768")
+
+            fullHost = driver_host + "/wd/hub"
+            input_driver = webdriver.Remote(
+                command_executor=fullHost,
+                options=options,
+            )
         return input_driver
 
 
